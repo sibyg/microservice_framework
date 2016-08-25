@@ -5,9 +5,14 @@ import static java.lang.String.format;
 import uk.gov.justice.domain.aggregate.Aggregate;
 import uk.gov.justice.services.common.converter.JsonObjectToObjectConverter;
 import uk.gov.justice.services.core.extension.EventFoundEvent;
+import uk.gov.justice.services.eventsourcing.common.exception.DuplicateSnapshotException;
+import uk.gov.justice.services.eventsourcing.common.exception.InvalidSequenceIdException;
+import uk.gov.justice.services.eventsourcing.common.snapshot.AggregateSnapshot;
 import uk.gov.justice.services.eventsourcing.source.core.EventStream;
+import uk.gov.justice.services.eventsourcing.source.core.SnapshotService;
 import uk.gov.justice.services.messaging.JsonEnvelope;
 
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -26,6 +31,9 @@ public class AggregateService {
     Logger logger;
 
     @Inject
+    SnapshotService snapshotService;
+
+    @Inject
     JsonObjectToObjectConverter jsonObjectToObjectConverter;
 
     private ConcurrentHashMap<String, Class<?>> eventMap = new ConcurrentHashMap<>();
@@ -38,7 +46,20 @@ public class AggregateService {
      * @param <T>    the type of aggregate being recreated
      * @return the recreated aggregate
      */
-    public <T extends Aggregate> T get(final EventStream stream, final Class<T> clazz) {
+    public <T extends Aggregate> T get(final EventStream stream, final Class<T> clazz)  {
+
+        Optional<AggregateSnapshot> aggregateSnapshot = snapshotService.getLatestSnapshot(stream.getId());
+
+        //if (aggregateSnapshot.isPresent()) {
+            // Deserialize the aggregate based on the type (From byte[] to object)
+            // Compare the  sequence no (using getCurrentVersion()) from the deserialized aggregate to that of the Command event stream
+            // If snapshot is behind the latest version behind then apply the new events on top of the aggregate
+            // check with snapshot strategy if a new snapshot to be created if so create one
+        //}
+
+        //if (!aggregateSnapshot.isPresent()) {
+         //   snapshotService.storeSnapshot(aggregateSnapshot.get());
+       // }
 
         try {
             logger.trace("Recreating aggregate for instance {} of aggregate type {}", stream.getId(), clazz);
@@ -57,7 +78,7 @@ public class AggregateService {
      * @param event identified by the framework to be registered into the event map
      */
     void register(@Observes final EventFoundEvent event) {
-        logger.info("Registering event {}, {} with AggregateService", event.getEventName() , event.getClazz());
+        logger.info("Registering event {}, {} with AggregateService", event.getEventName(), event.getClazz());
         eventMap.putIfAbsent(event.getEventName(), event.getClazz());
     }
 

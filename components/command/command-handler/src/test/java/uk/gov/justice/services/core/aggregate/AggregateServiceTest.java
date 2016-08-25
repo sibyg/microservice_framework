@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -16,10 +17,13 @@ import uk.gov.justice.domain.aggregate.Aggregate;
 import uk.gov.justice.domain.annotation.Event;
 import uk.gov.justice.services.common.converter.JsonObjectToObjectConverter;
 import uk.gov.justice.services.core.extension.EventFoundEvent;
+import uk.gov.justice.services.eventsourcing.common.snapshot.AggregateSnapshot;
 import uk.gov.justice.services.eventsourcing.source.core.EventStream;
+import uk.gov.justice.services.eventsourcing.source.core.SnapshotService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -52,6 +56,43 @@ public class AggregateServiceTest {
     @InjectMocks
     private AggregateService aggregateService;
 
+    @Mock
+    private SnapshotService snapshotService;
+
+
+    // Replay delta events since snapshot was taken
+
+    // Apply commands on the aggregate
+
+    // Notes:
+    // Check whether the most recent event created is replayed into the Aggregate
+    // so that the snapshot has the most recetnly played events
+
+    //Make sure an snapshotstrategy is injected on the SnapshotService
+
+
+    @Test
+    public void shouldGetTheLatestSnapshotWhenAvailable() {
+        // Intercept and ask snapshot service to return an optional snapshot
+        when(eventStream.read()).thenReturn(Stream.empty());
+        when(eventStream.getId()).thenReturn(STREAM_ID);
+
+        Optional<AggregateSnapshot> aggregateSnapshot = snapshotService.getLatestSnapshot(STREAM_ID);
+
+        //assertThat(aggregateSnapshot, notNullValue());
+       // assertThat(aggregateSnapshot.get().getStreamId(),notNullValue());
+       // assertEquals(aggregateSnapshot.get().getStreamId(),STREAM_ID);
+
+        //verify(logger).trace("Recreating aggregate for instance {} of aggregate type {}", STREAM_ID, RecordingAggregate.class);
+
+    }
+
+    @Test
+    public void shouldCreateANewSnapshotWhenNotAvailable() {
+        // Intercept and ask snapshot service to return an optional snapshot
+
+    }
+
     @Test
     public void shouldCreateAggregateFromEmptyStream() {
         when(eventStream.read()).thenReturn(Stream.empty());
@@ -79,7 +120,7 @@ public class AggregateServiceTest {
         assertThat(aggregate, notNullValue());
         assertThat(aggregate.recordedEvents, hasSize(1));
         assertThat(aggregate.recordedEvents.get(0), equalTo(eventA));
-        verify(logger).info("Registering event {}, {} with AggregateService", "eventA" , EventA.class);
+        verify(logger).info("Registering event {}, {} with AggregateService", "eventA", EventA.class);
         verify(logger).trace("Recreating aggregate for instance {} of aggregate type {}", STREAM_ID, RecordingAggregate.class);
     }
 
@@ -105,8 +146,8 @@ public class AggregateServiceTest {
         assertThat(aggregate.recordedEvents, hasSize(2));
         assertThat(aggregate.recordedEvents.get(0), equalTo(eventA));
         assertThat(aggregate.recordedEvents.get(1), equalTo(eventB));
-        verify(logger).info("Registering event {}, {} with AggregateService", "eventA" , EventA.class);
-        verify(logger).info("Registering event {}, {} with AggregateService", "eventB" , EventB.class);
+        verify(logger).info("Registering event {}, {} with AggregateService", "eventA", EventA.class);
+        verify(logger).info("Registering event {}, {} with AggregateService", "eventB", EventB.class);
         verify(logger).trace("Recreating aggregate for instance {} of aggregate type {}", STREAM_ID, RecordingAggregate.class);
     }
 
