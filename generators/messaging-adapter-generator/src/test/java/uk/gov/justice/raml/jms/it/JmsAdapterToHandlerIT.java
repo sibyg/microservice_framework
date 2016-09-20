@@ -61,17 +61,44 @@ import javax.jms.Topic;
 import org.apache.openejb.jee.WebApp;
 import org.apache.openejb.junit.ApplicationComposer;
 import org.apache.openejb.testing.Classes;
+import org.apache.openejb.testing.ContainerProperties;
+import org.apache.openejb.testing.Default;
 import org.apache.openejb.testing.Module;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 
 @RunWith(ApplicationComposer.class)
+@ContainerProperties({
+        @ContainerProperties.Property(name = "Default MDB Container.ResourceAdapter", value = "Artemis JMS Resource Adapter"),
+        @ContainerProperties.Property(name = "Default MDB Container.ActivationSpecClass", value = "org.apache.activemq.artemis.ra.inflow.ActiveMQActivationSpec"),
+        @ContainerProperties.Property(name = "Artemis JMS Resource Adapter", value = "new://Resource?type=ActiveMQResourceAdapter&provider=uk.gov.justice:Artemis JMS Resource Adapter"),
+        @ContainerProperties.Property(name = "Default JMS Connection Factory", value = "new://Resource?type=javax.jms.ConnectionFactory&provider=uk.gov.justice:Artemis JMS Connection Factory"),
+//        @ContainerProperties.Property(name = "Default JMS Connection Factory.ResourceAdapter", value = "Artemis JMS Resource Adapter"),
+//        @ContainerProperties.Property(name = "Default MDB Container", value = "new://Container?type=MESSAGE&provider=uk.gov.justice:Default MDB Container"),
+//        @ContainerProperties.Property(name = "Default JMS Connection Factory.ResourceAdapter", value = "Artemis JMS Resource Adapter")
+//        ,
+        @ContainerProperties.Property(name = "people.event", value = "new://Resource?type=javax.jms.Topic&provider=uk.gov.justice:Artemis Topic"),
+})
+//
+//<Resource
+//		id="jms/EclipseLinkTopicConnectionFactory"
+//                type="javax.jms.ConnectionFactory">
+//                ResourceAdapter = ra/activemq
+//</Resource>
+//<Resource
+//		id="jms/connectionFactory"
+//                type="javax.jms.ConnectionFactory">
+//                ResourceAdapter = ra/activemq
+//                poolMinSize = 5
+//                transactionSupport = xa
+//</Resource>
 public class JmsAdapterToHandlerIT extends AbstractJmsAdapterGenerationIT {
 
     private static final String PEOPLE_EVENT_AA = "people.eventaa";
     @Resource(name = "people.event")
-    private Topic peopleEventsDestination;
+    private org.apache.activemq.artemis.jms.client.ActiveMQTopic peopleEventsDestination;
+//    private Topic peopleEventsDestination;
 
     @Inject
     private RecordingEventAAHandler aaEventHandler;

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ServiceJar>
+
+    <!--<ServiceProvider-->
+            <!--id="Default MDB Container"-->
+            <!--service="Container"-->
+            <!--types="MESSAGE"-->
+            <!--constructor="id, securityService, ResourceAdapter, MessageListenerInterface, ActivationSpecClass, InstanceLimit, FailOnUnknowActivationSpec"-->
+            <!--class-name="org.apache.openejb.core.mdb.MdbContainer">-->
+
+        <!--# The resource adapter delivers messages to the container-->
+
+        <!--ResourceAdapter Default JMS Resource Adapter-->
+
+        <!--# Specifies the message listener interface handled by this container-->
+
+        <!--MessageListenerInterface javax.jms.MessageListener-->
+
+        <!--# Specifies the activation spec class-->
+
+        <!--ActivationSpecClass org.apache.activemq.artemis.ra.inflow.ActiveMQActivationSpec-->
+
+        <!--# Specifies the maximum number of bean instances that are-->
+        <!--# allowed to exist for each MDB deployment.-->
+
+        <!--InstanceLimit 10-->
+
+        <!--# log a warning if true or throw an exception if false is an activation spec can't be respected-->
+
+        <!--FailOnUnknowActivationSpec = true-->
+
+    <!--</ServiceProvider>-->
+
+    <ServiceProvider
+            id="Artemis JMS Resource Adapter"
+            service="Resource"
+            types="ArtemisMQResourceAdapter"
+            class-name="org.apache.activemq.artemis.ra.ActiveMQResourceAdapter">
+        ConnectorClassName = org.apache.activemq.artemis.core.remoting.impl.invm.InVMConnectorFactory
+        ConnectionParameters = server-id=0
+    </ServiceProvider>
+
+    <ServiceProvider
+            id="Artemis JMS Connection Factory"
+            service="Resource"
+            types="javax.jms.ConnectionFactory, javax.jms.QueueConnectionFactory, javax.jms.TopicConnectionFactory, QueueConnectionFactory, TopicConnectionFactory"
+            class-name="org.apache.activemq.artemis.ra.ActiveMQRAManagedConnectionFactory">
+        ResourceAdapter = Artemis JMS Resource Adapter
+
+    </ServiceProvider>
+
+    <ServiceProvider
+            id="Default Queue"
+            service="Resource"
+            types="javax.jms.Queue, Queue, javax.jms.Destination"
+            constructor="name"
+            class-name="org.apache.activemq.artemis.jms.client.ActiveMQQueue">
+        name
+    </ServiceProvider>
+
+    <ServiceProvider
+            id="Artemis Topic"
+            service="Resource"
+            types="javax.jms.Topic, Topic, javax.jms.Destination"
+            constructor="name"
+            class-name="org.apache.activemq.artemis.jms.client.ActiveMQTopic">
+        name
+    </ServiceProvider>
+</ServiceJar>
