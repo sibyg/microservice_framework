@@ -85,10 +85,59 @@
             <groupId>org.apache.tomee</groupId>
             <artifactId>openejb-cxf-rs</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.johnzon</groupId>
+                    <artifactId>johnzon-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.tomee</groupId>
             <artifactId>openejb-core</artifactId>
+            <scope>test</scope>
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<artifactId>activemq-ra</artifactId>-->
+                    <!--<groupId>org.apache.activemq</groupId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<groupId>org.apache.activemq</groupId>-->
+                    <!--<artifactId>activemq-broker</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<groupId>org.apache.activemq</groupId>-->
+                    <!--<artifactId>activemq-jdbc-store</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.apache.activemq.examples.modules</groupId>-->
+            <!--<artifactId>artemis-rar</artifactId>-->
+            <!--<version>1.4.0</version>-->
+            <!--<type>rar</type>-->
+            <!--<scope>test</scope>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>org.apache.johnzon</groupId>-->
+                    <!--<artifactId>johnzon-core</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<groupId>org.apache.activemq</groupId>-->
+                    <!--<artifactId>artemis-selector</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>artemis-selector</artifactId>
+            <version>1.4.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.johnzon</groupId>
+            <artifactId>johnzon-core</artifactId>
+            <version>0.9.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
