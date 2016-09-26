@@ -80,6 +80,7 @@ public class AddRecipeCommandHandlerTest {
 
         addRecipeCommandHandler.addRecipe(command);
 
+
         verify(eventStream).append(streamCaptor.capture());
         assertThat(streamCaptor.getValue().collect(toList()), hasItems(envelope));
     }

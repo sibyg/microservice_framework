@@ -36,7 +36,7 @@ public class RemoveRecipeCommandHandler {
     Enveloper enveloper;
 
     @Handles("cakeshop.remove-recipe")
-    public void removeRecipe(final JsonEnvelope command) throws EventStreamException {
+    public void removeRecipe(final JsonEnvelope command) throws EventStreamException{
         LOGGER.trace("=============> Inside remove-recipe Command Handler. RecipeId: " + command.payloadAsJsonObject().getString(FIELD_RECIPE_ID));
 
         final UUID recipeId = getUUID(command.payloadAsJsonObject(), FIELD_RECIPE_ID).get();
