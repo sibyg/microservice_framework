@@ -454,6 +454,24 @@ public class JmsEndpointGeneratorTest extends BaseGeneratorTest {
                 hasItemInArray(allOf(propertyName(equalTo("destinationLookup")),
                         propertyValue(equalTo("structure.event")))));
     }
+    
+    @Test
+    public void shouldCreateAnnotatedEventListenerEndpointWithSharedSubscriptionsPropertySetToTrue() throws Exception {
+           generator.run(
+                   messagingRamlWithDefaults()
+                            .withDefaultMessagingBaseUri()
+                            .with(resource()
+                                    .withRelativeUri("/structure.event")
+                                   .with(httpAction(POST, "application/vnd.structure.abc+json")))
+                            .build(),
+                    configurationWithBasePackage(BASE_PACKAGE, outputFolder, emptyMap()));
+    
+            Class<?> clazz = compiler.compiledClassOf(BASE_PACKAGE, "StructureEventJmsListener");
+            assertThat(clazz.getAnnotation(MessageDriven.class), is(notNullValue()));
+            assertThat(clazz.getAnnotation(MessageDriven.class).activationConfig(),
+                    hasItemInArray(allOf(propertyName(equalTo("shareSubscriptions")),
+                            propertyValue(equalTo("true")))));
+    }
 
     @Test
     public void shouldCreateAnnotatedControllerCommandEndpointWithQueueAsDestinationType() throws Exception {

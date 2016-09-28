@@ -9,7 +9,7 @@
     </parent>
     <artifactId>example-it</artifactId>
     <properties>
-        <jboss.home>${project.build.directory}/wildfly-10.0.0.Final</jboss.home>
+        <jboss.home>${project.build.directory}/wildfly-10.1.0.Final</jboss.home>
         <server.config>standalone-test.xml</server.config>
         <wildfly.keepalive>false</wildfly.keepalive>
     </properties>
@@ -128,13 +128,39 @@
             <artifactId>test-utils-core</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.activemq</groupId>
+                    <artifactId>artemis-ra</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.activemq</groupId>
+                    <artifactId>artemis-jms-server</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>uk.gov.justice.services</groupId>
             <artifactId>test-utils-persistence</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.activemq</groupId>
+                    <artifactId>artemis-ra</artifactId>
+                </exclusion>
+            <exclusion>
+                    <groupId>org.apache.activemq</groupId>
+                    <artifactId>artemis-jms-server</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+       <!-- 
+        <dependency>
+            <groupId>org.wildfly</groupId>
+            <artifactId>wildfly-client-all</artifactId>
+        </dependency>
+        -->
     </dependencies>
 
 
